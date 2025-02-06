@@ -1,114 +1,104 @@
-Te Chhenghab, [2/6/2025 11:21 AM]
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js"></script>
+    <title>Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
     <style>
-        #taskcontainer{
-            margin: auto;
-            width: 200px;
-            height: 100px;
-            border-radius: 20px;
-            align-items: center;
-            text-align: center;
-        }
-        .container{
-            margin: auto;
-            width: 100%;
-            height: 500px;
-            display: flex;
-            flex-direction: row;
-            align-items: center;
-        }
+        body { font-family: Arial, sans-serif; }
+        .task-container { margin-top: 20px; width: 20rem; }
+        .task { padding: 10px; border: 1px solid #ccc; margin-top: 5px; text-align: center; font-size: 20px; color: white; }
+        h1 { text-align: center; }
+        .input-group, .form-select { width: 20rem; height: 2.5rem; }
+        form { margin-bottom: 2rem; }
+        .form { margin-top: 7rem; }
+        .container { display: flex; justify-content: space-between; margin-left: 40rem; }
+        .filter-buttons { margin-top: 10px; }
+        .filter-buttons button { margin-right: 5px; }
     </style>
 </head>
 <body>
-    
+    <h1>Task Manager</h1>
     <div class="container">
-        <table>
-            <tr>
-                <td><label class="form-label" for="">Task: </label></td>
-                <td><input class="form-control" type="text" name="task" id="taskAdd"></td>
-                <tr>
-                    <td><label for="">Priority: </label></td>
-                    <td><select class="form-select" name="" id="priority">
-                        <option value="1">High</option>
-                        <option value="0">Low</option>
-                    </select></td>
-                </tr>
-                <tr>
-                    <td><button class="btn btn-info" id="add-btn" onclick="addTask()">add task</button></td>
-                </tr>
-                <tr>
-                    <td><button class="btn btn-primary" id="showimp-btn" onclick="showImp()">Show Important</button></td>
-                </tr>
-                <tr>
-                    <td><button class="btn btn-secondary" id="shownotimp-btn" onclick="shownotImp()">Show not Important</button></td>
-                </tr>
-                <tr>
-                    <td><button class="btn btn-success" id="showall-btn" onclick="loadTask()">Show All</button></td>
-                </tr>
-            </tr>
-        </table>
-        <div id="taskcontainer"></div>
+        <div class="form">
+            <form class="row g-3" id="task-form">
+                <div class="input-group flex-nowrap">
+                    <span class="input-group-text" id="addon-wrapping"></span>
+                    <input type="text" id="task-input" class="form-control" placeholder="Enter task">
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary mb-3">Confirm</button>
+                </div>
+                <select class="form-select" id="priority-select">
+                    <option selected>Priority</option>
+                    <option value="1">High Priority</option>
+                    <option value="0">Low Priority</option>
+                </select>
+            </form>
+        </div>
     </div>
+
+
+    <div class="filter-buttons text-center">
+        <button class="btn btn-danger" onclick="displaytasks(1)">Show High Priority</button>
+        <button class="btn btn-secondary" onclick="displaytasks(0)">Show Low Priority</button>
+        <button class="btn btn-primary" onclick="displaytasks()">Show All</button>
+    </div>
+
+    <div id="task-container" class="task-container"></div>
+
     <script>
-        let task = [
-            {description: "Task1", priority: 1},
-            {description: "Task2", priority: 0},
-            {description: "Task3", priority: 1}
-        ]
-        function loadTask(){
-            document.getElementById("taskcontainer").innerHTML = "";
-            task.forEach((taskcontainer, index) => {
+        let tasks = [
+            { description: "Task 1", priority: 1 },
+            { description: "Task 2", priority: 0 },
+            { description: "Task 3", priority: 1 },
+        ];
 
-                let div = document.createElement("div");
-                div.innerHTML = taskcontainer.description;
-                if(taskcontainer.priority === 1){
-                    div.style.background = "red";
-                }
-                else if(taskcontainer.priority === 0){
-                    div.style.background = "gray";
-                }
-                document.getElementById("taskcontainer").appendChild(div);
-            });
-        }
-        function addTask(){
-            let taskdes = document.getElementById("taskAdd").value;
-            let priority = document.getElementById("priority").value;
+        function displaytasks(filter = null) {
+            const container = document.getElementById('task-container');
+            container.innerHTML = ''; 
 
-let newTask = {description: taskdes, priority: parseInt(priority)};
-            task.push(newTask);
-            loadTask();
-            document.getElementById("taskAdd").value = "";
-        }
-        loadTask();
-        function showImp(){
-            document.getElementById("taskcontainer").innerHTML = "";
-            task.forEach((taskcontainer, index) => {
-                if(taskcontainer.priority === 1){
-                    let div = document.createElement("div");
-                    div.innerHTML = taskcontainer.description;
-                    div.style.background = "red";
-                    document.getElementById("taskcontainer").appendChild(div);
+            tasks.forEach(task => {
+                if (filter === null || task.priority === filter) {
+                    const taskElement = document.createElement('div');
+                    taskElement.textContent = task.description;
+                    taskElement.className = 'task';
+                    taskElement.style.backgroundColor = task.priority === 1 ? 'red' : 'grey';
+                    container.appendChild(taskElement);
                 }
             });
         }
-        function shownotImp(){
-            document.getElementById("taskcontainer").innerHTML = "";
-            task.forEach((taskcontainer, index) => {
-                if(taskcontainer.priority === 0){
-                    let div = document.createElement("div");
-                    div.innerHTML = taskcontainer.description;
-                    div.style.background = "gray";
-                    document.getElementById("taskcontainer").appendChild(div);
-                }
-            });
+
+        function addTask(event) {
+            event.preventDefault();
+
+            const taskInput = document.getElementById('task-input');
+            const prioritySelect = document.getElementById('priority-select');
+            const taskDescription = taskInput.value.trim();
+            const taskPriority = prioritySelect.value;
+
+            if (taskDescription === '') {
+                alert('Please enter a task!');
+                return;
+            }
+            if (taskPriority === 'Priority') {
+                alert('Please select a priority!');
+                return;
+            }
+
+            tasks.push({ description: taskDescription, priority: parseInt(taskPriority) });
+
+            taskInput.value = '';
+            prioritySelect.value = 'Priority';
+
+            displaytasks();  
         }
+
+        document.getElementById('task-form').addEventListener('submit', addTask);
+
+        displaytasks();  
     </script>
 </body>
 </html>
