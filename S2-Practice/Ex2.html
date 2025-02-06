@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Manager</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; }
+        .task-container { margin-top: 20px; }
+        .task { padding: 10px; border: 1px solid #ccc; margin-top: 5px; }
+        h1 {
+            text-align: center;
+        }
+        .input-group {
+            width: 20rem;
+            height: 2.5rem;
+        }
+        .form-select{
+            width: 20rem;
+            height: 2.5rem;
+        }
+        form{
+            margin-bottom: 2rem;
+        }
+        .form{
+            margin-top: 7rem;
+        }
+        .task-container{
+            width: 20rem;
+            margin-top: -8rem;
+        }
+        .container{
+            display: flex;
+            justify-content: space-between;
+            margin-left: 40rem;
+            
+        }
+    </style>
+
+</head>
+<body>
+    <h1>Task Manager</h1>
+    <div class="container">
+    <div class="form">
+    <form class="row g-3" id="task-form">
+        <div class="input-group flex-nowrap">
+            <span class="input-group-text" id="addon-wrapping"></span>
+            <input type="text" id="task-input" class="form-control" placeholder="Enter task" aria-label="Username" aria-describedby="addon-wrapping">
+        </div>
+        <div class="col-auto ">
+          <button type="submit" class="btn btn-primary mb-3 ">Confirm </button>
+        </div>
+    <select class="form-select" id= "priority-select"aria-label="Default select example">
+        <option selected>Priority</option>
+        <option value="1">High Priority</option>
+        <option value="2">low Priority</option>
+    </select>
+    </form>
+    </div>
+    <script>
+        let tasks = [
+            { description : " Task 1 ", priority : 1 },
+            { description : " Task 2 ", priority : 0 },
+            { description : " Task 3 ", priority : 1 },
+        ];
+        function displaytasks(tasks){
+            const container = document.createElement('div');
+            container.className = "task-container";
+            document.body.appendChild(container);
+
+            tasks.forEach(task => {
+                const elementTask = document.createElement('div');
+                elementTask.textContent = task.description;
+                elementTask.style.padding = '10px';
+                elementTask.style.margin = '5px 0';    
+                elementTask.style.color = 'white';
+                elementTask.style.textAlign = 'center';
+                elementTask.style.fontSize = '20px';
+                
+                if (task.priority === 1 ){
+                    elementTask.style.backgroundColor = 'red';
+                }else {
+                    elementTask.style.backgroundColor = 'grey';
+                }
+                container.appendChild(elementTask);
+            });
+        }
+        displaytasks(tasks);
+        document.getElementById('task-form').addEventListener('submit', function(event) {
+            event.preventDefault();
+
+            // Get task description and priority
+            const taskDescription = document.getElementById('task-input').value.trim();
+            const taskPriority = document.getElementById('priority-select').value;
+
+            if (taskDescription === '') {
+                alert('Please enter a task!');
+                return;
+            }
+
+            if (taskPriority === 'Priority') {
+                alert('Please select a priority!');
+                return;
+            }
+
+            // Add new task to the tasks array
+            tasks.push({ description: taskDescription, priority: parseInt(taskPriority) });
+
+            // Clear input fields
+            document.getElementById('task-input').value = '';
+            document.getElementById('priority-select').value = 'Priority';
+
+            // Re-display the updated task list
+            displaytasks(tasks);
+        });
+        
+    </script>
+    </div>
+</body>
+</html>
